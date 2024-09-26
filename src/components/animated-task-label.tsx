@@ -54,6 +54,19 @@ function AnimatedTaskLabel({
     [strikethrough, textColor, inactiveTextColor],
   );
 
+  const strikethroughWidth = useSharedValue(0);
+  const strikethroughAnimatedStyle = useAnimatedStyle(
+    () => ({
+      width: `${strikethroughWidth.value * 100}%`,
+      borderBottomColor: interpolateColor(
+        textColorProgress.value,
+        [0, 1],
+        [textColor, inactiveTextColor],
+      ),
+    }),
+    [strikethrough, textColor, inactiveTextColor],
+  );
+
   useEffect(() => {
     const easing = Easing.out(Easing.quad);
 
@@ -75,13 +88,22 @@ function AnimatedTaskLabel({
           easing,
         }),
       );
+      strikethroughWidth.value = withTiming(1, {
+        duration: 400,
+        easing,
+      });
     } else {
       textColorProgress.value = withTiming(0, {
         duration: 400,
         easing,
       });
+
+      strikethroughWidth.value = withTiming(0, {
+        duration: 400,
+        easing,
+      });
     }
-  }, [hstackOffset, strikethrough, textColorProgress]);
+  }, [hstackOffset, strikethrough, strikethroughWidth, textColorProgress]);
 
   return (
     <Pressable onPress={onPress}>
@@ -99,6 +121,7 @@ function AnimatedTaskLabel({
           position="absolute"
           h={1}
           borderBottomWidth={1}
+          style={[strikethroughAnimatedStyle]}
         ></AnimatedBox>
       </AnimatedHStack>
     </Pressable>
