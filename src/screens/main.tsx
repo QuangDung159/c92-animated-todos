@@ -5,6 +5,8 @@ import ThemeToggle from 'components/theme-toggle';
 
 function MainScreen() {
   const [checked, setChecked] = useState(false);
+  const [subject, setSubject] = useState('Task item');
+  const [isEditing, setIsEditing] = useState(false);
 
   const handlePressCheckbox = useCallback(() => {
     setChecked((prev) => !prev);
@@ -22,9 +24,13 @@ function MainScreen() {
     >
       <VStack space={5} alignItems="center" w={'full'}>
         <TaskItem
+          isEditing={isEditing}
           isDone={checked}
           onToggleCheckbox={handlePressCheckbox}
-          subject="Task item"
+          subject={subject}
+          onChangeSubject={setSubject}
+          onPressLabel={() => setIsEditing(true)}
+          onFinishEditing={() => setIsEditing(false)}
         />
         <ThemeToggle />
       </VStack>
