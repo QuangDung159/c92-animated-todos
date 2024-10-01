@@ -1,7 +1,8 @@
 import { AntDesign } from '@expo/vector-icons';
-import { Center, Fab, Icon, useColorModeValue, VStack } from 'native-base';
+import { Fab, Icon, useColorModeValue, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import shortid from 'shortid';
+import AnimatedColorBox from 'components/animated-color-box';
 import TaskList, { TaskItemData } from 'components/task-list';
 import ThemeToggle from 'components/theme-toggle';
 
@@ -63,14 +64,10 @@ function MainScreen() {
   }, []);
 
   return (
-    <Center
-      _dark={{
-        bg: 'blueGray.900',
-      }}
-      _light={{
-        bg: 'blueGray.50',
-      }}
+    <AnimatedColorBox
       flex={1}
+      bg={useColorModeValue('warmGray.50', 'primary.900')}
+      w={'full'}
     >
       <VStack space={5} alignItems="center" w={'full'}>
         <TaskList
@@ -104,7 +101,7 @@ function MainScreen() {
           setEditingItemId(id);
         }}
       />
-    </Center>
+    </AnimatedColorBox>
   );
 }
 
