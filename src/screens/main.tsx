@@ -1,15 +1,64 @@
 import { Center, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
-import TaskItem from 'components/task-item';
+import shortid from 'shortid';
+import TaskList, { TaskItemData } from 'components/task-list';
 import ThemeToggle from 'components/theme-toggle';
 
-function MainScreen() {
-  const [checked, setChecked] = useState(false);
-  const [subject, setSubject] = useState('Task item');
-  const [isEditing, setIsEditing] = useState(false);
+const initialData: TaskItemData[] = [
+  {
+    id: shortid.generate(),
+    done: true,
+    subject: 'Task 1',
+  },
+  {
+    id: shortid.generate(),
+    done: false,
+    subject: 'Task 2',
+  },
+];
 
-  const handlePressCheckbox = useCallback(() => {
-    setChecked((prev) => !prev);
+function MainScreen() {
+  const [data, setData] = useState(initialData);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
+
+  const handleToggleTaskItem = useCallback((item: TaskItemData) => {
+    setData((prev) => {
+      const newData = [...prev];
+      const index = prev.indexOf(item);
+      newData[index] = { ...item, done: !item.done };
+
+      return newData;
+    });
+  }, []);
+
+  const handleChangeTaskItemSubject = useCallback(
+    (item: TaskItemData, newSubject: string) => {
+      setData((prev) => {
+        const newData = [...prev];
+        const index = prev.indexOf(item);
+        newData[index] = { ...item, subject: newSubject };
+
+        return newData;
+      });
+    },
+    [],
+  );
+
+  const handleRemoveItem = useCallback((item: TaskItemData) => {
+    setData((prev) => {
+      const newData = prev.filter((i) => i !== item);
+
+      return newData;
+    });
+  }, []);
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const handleFinishEditingTaskItem = useCallback((_item: TaskItemData) => {
+    setEditingItemId(null);
+  }, []);
+
+  const handlePressTaskItemLabel = useCallback((item: TaskItemData) => {
+    setEditingItemId(item.id);
   }, []);
 
   return (
@@ -23,14 +72,14 @@ function MainScreen() {
       flex={1}
     >
       <VStack space={5} alignItems="center" w={'full'}>
-        <TaskItem
-          isEditing={isEditing}
-          isDone={checked}
-          onToggleCheckbox={handlePressCheckbox}
-          subject={subject}
-          onChangeSubject={setSubject}
-          onPressLabel={() => setIsEditing(true)}
-          onFinishEditing={() => setIsEditing(false)}
+        <TaskList
+          data={data}
+          onPressLabel={handlePressTaskItemLabel}
+          onFinishEditing={handleFinishEditingTaskItem}
+          editingItemId={editingItemId}
+          onChangeSubject={handleChangeTaskItemSubject}
+          onToggleItem={handleToggleTaskItem}
+          onRemoveItem={handleRemoveItem}
         />
         <ThemeToggle />
       </VStack>
