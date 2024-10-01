@@ -3,8 +3,9 @@ import { Fab, Icon, useColorModeValue, VStack } from 'native-base';
 import React, { useCallback, useState } from 'react';
 import shortid from 'shortid';
 import AnimatedColorBox from 'components/animated-color-box';
+import Masthead from 'components/masthead';
+import Navbar from 'components/navbar';
 import TaskList, { TaskItemData } from 'components/task-list';
-import ThemeToggle from 'components/theme-toggle';
 
 const initialData: TaskItemData[] = [
   {
@@ -69,7 +70,22 @@ function MainScreen() {
       bg={useColorModeValue('warmGray.50', 'primary.900')}
       w={'full'}
     >
-      <VStack space={5} alignItems="center" w={'full'}>
+      <Masthead
+        title="Hi, C92!"
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        image={require('../assets/masthead.png')}
+      >
+        <Navbar />
+      </Masthead>
+      <VStack
+        space={1}
+        flex={1}
+        mt={'-20px'}
+        borderTopLeftRadius={'20px'}
+        borderTopRightRadius={'20px'}
+        pt={'20px'}
+        bg={useColorModeValue('warmGray.50', 'primary.900')}
+      >
         <TaskList
           data={data}
           onPressLabel={handlePressTaskItemLabel}
@@ -79,7 +95,6 @@ function MainScreen() {
           onToggleItem={handleToggleTaskItem}
           onRemoveItem={handleRemoveItem}
         />
-        <ThemeToggle />
       </VStack>
       <Fab
         position={'absolute'}
