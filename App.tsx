@@ -1,11 +1,11 @@
 import * as React from 'react';
 import AppContainer from 'components/app-container';
-import MainScreen from 'screens/main';
+import Navigator from './src';
 
 export default function App() {
   return (
     <AppContainer>
-      <MainScreen />
+      <Navigator />
     </AppContainer>
   );
 }
